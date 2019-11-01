@@ -1,0 +1,132 @@
+
+\documentclass[10.5pt]{article}
+\usepackage[letterpaper,margin=1in,headsep=5pt,footskip=18pt]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\chead{}
+\rhead{\color{BrickRed} \bfseries\sffamily Yuansheng Zhu}
+\lhead{\color{BrickRed} \bfseries\sffamily Pattern Recognition and Machine Learning}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\minihead}[1]{\vspace{.25em}\noindent{\textbf{#1.} }}
+\let\oldpara\paragraph
+\renewcommand{\paragraph}{\vspace{-.5em}\oldpara}
+
+\usepackage{graphicx,caption,longtable,url}
+\usepackage{amsmath,amssymb,bbm,bm} %
+\usepackage{amsthm}
+
+\usepackage{hyperref}%
+\hypersetup{
+    bookmarks=true,         % show bookmarks bar?
+    unicode=false,          % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdftitle={Anomaly Detection},    % title
+    pdfauthor={Yuansheng Zhu},     % author
+    pdfnewwindow=false,     % links in new window
+    colorlinks=true,        % false: boxed links; true: colored links
+    linkcolor=blue,       % color of internal links (change box color with linkbordercolor)
+    citecolor=black,     % color of links to bibliography
+    filecolor=blue,      % color of file links
+    urlcolor=BurntOrange           % color of external links
+}
+
+\usepackage{abstract}
+\renewcommand{\abstractname}{}    % clear the title
+\renewcommand{\absnamepos}{empty} % originally center
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \title{ \vspace{-2em} \bf Chapter 6 \vspace{-2.2em} }
+ 
+ \newline
+
+ \date{10/31/2019}
+ 
+ 
+
+ 
+ 
+ 
+ 
+\begin{document}
+\newcommand{\cemph}[1]{{\color{BrickRed} \bfseries {#1}}}
+\renewcommand{\theenumi}{\alph{enumi}}
+\maketitle
+\thispagestyle{fancy}
+
+\renewcommand{\theenumi}{\arabic{enumi}}
+
+\newcommand{\qy}[1]{\textcolor{blue}{\commentm{QY: #1}}}
+
+
+
+\begin{enumerate}
+    \item Stationary kernel: $k(X,X') = k(X-X')$. There are two inputs in the right hand side, but there is only one input in the right hand side, why?\\
+    {\bf{Answer:}}: The $k$ in two sides have different meanings, since they are two different functions. In other materials, the stationary kernel is expressed as: $k(X, X') = k_S(X-X')$. For example, Mahalanobis Kernel is stationary kernel. Its expression is: $k(x-x')= h*exp\{-1/2(x-x')^T \Sigma^{-1}(x-x')\}$. In this case, $k_S$ can be regarded as a function:$k_s(z)=h*exp\{-1/2(z)^T \Sigma^{-1}(z)\}$.
+    \item How to prove equation 6.13 to equation 6.22 are true? \\
+    {\bf{Answer:}}
+    \begin{itemize}
+        \item $k(X, X') = ck_1(X, X')$                                           (6.13)\\
+        Proof: \begin{align}
+            ck_1(X, X') &= cX^TA_1X'\\
+            &=X^TcA_1X'
+        \end{align}
+        Because $k_1$ is a valid kernel and $c>0$, so $cA_1$ is PSD. 
+        \item $k(X, X') = f(X)k_1(X, X')f(X')$                                    (6.14)\\
+        Proof: \begin{align}
+            f(X)k_1(X, X')f(X') &= f(X)<\phi(X),\phi(X'))>f(X)\\
+            &=<f(X)\phi(X),\phi(X')f(X')>\\
+            &=<\phi'(X),\phi'(X')>
+        \end{align}
+        \item $k(X, X') = q(k_1(X, X'))$                                    (6.15)\\
+        Proof: Since each polynomial term is a product of kernels with a positive coefficient, the proof follows by applying 6.13 and 6.18.
+        \item $k(X, X') = exp(k_1(X, X'))$                                    (6.16)\\
+        Proof: We have $exp(X) = \lim_{X\to\infty}(1 . . . + X_i/i!)$. The proof followscausek3is valid kerne from 6.15 and the fact that: $k(X, X') = \lim_{i\to\infty}k_i(X, z)$.
+        \item $k(X, X') = k_1(X, X')+k_2(X, X')$                                 (6.17)\\
+        Proof: Because $k_1$ and $k_2$ is valid kernel, so $k(x,x')>0$ for any $x$ and $x'$
+        \item  $k(X, X') = k_1(X, X')*k_2(X, X')$                                 (6.18)\\
+        Proof: Because $k_1$ and $k_2$ is valid kernel, so $k(X,X')= k_1(X, X')*k_2(X, X') \geq0$ for any $X$ and $X'$.
+        \item $k(X, X') = k_3(\phi(X),\phi(X'))$                                    (6.19)\\
+        Proof: Because $k_3$ is valid kernel, so $k(X, X')=k_3(\phi(X),\phi(X')) =>0$ for any $\phi(X)$ and $\phi(X')$.In other words, $k(X, X')=k_3(\phi(X),\phi(X')) \geq0$ for any $X$ and $X'$.
+        \item $k(X, X') = x^TAXx$                                    (6.20)\\
+        Proof: Because $A$ is a PSD matrix, so $k(X, X')=X^TAX'\geq0$ for any $X$ and $X'$. 
+        \item $k(X, X') = k_a(X_a, X_a')+k_2(X_b, X_b')$   (6.21)\\
+        Proof: \begin{align}
+            k_a(X_a, X_a')+k_2(X_b, X_b')&=X_a^TA_aX_a'+X_b^TA_bX_b'\\
+            &=[X_a,X_b]^T[X_a,0;0,X_b][X_a',X_b']\\
+            &=X[X_a,0;0,X_b]X'\\
+            &\geq0
+        \end{align}
+        \item $k(X, X') = k_a(X_a, X_a')*k_2(X_b, X_b')$   (6.21)\\
+        Proof: \begin{align}
+            k_a(X_a, X_a')+k_2(X_b, X_b')&=X_a^TA_aX_a'*X_b^TA_bX_b'\\
+            &\geq0
+        \end{align}
+    \end{itemize} 
+    \item Prove 6.43
+    \begin{align}
+        y(x)=E[t|x]&=\int_{-\infty}^{\infty}tp(t|x)dt=\\
+        &=\int tp(t|x)p(x)/p(x)dtdt\\
+        &=\frac{\int tp(x,t)dt}{p(x)}\\
+        &=\frac{\int tp(x,t)dt}{\int p(x,t)dt}\\
+    \end{align}
+    Then, substitute $p(x)$ by 6.42. 
+    \item Prove 6.61
+    
+    
+\end{enumerate}
+
+
+
+
+
+\bibliography{refs} 
+\bibliographystyle{ieeetr}
+
+\end{document} 
